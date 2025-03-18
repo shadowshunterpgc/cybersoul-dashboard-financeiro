@@ -4,6 +4,10 @@
 
 
 # Dashboard Financeiro
+
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+
 ### Necessidades
 - ~~Dólar em tempo real~~
 - Cadastro de ativos para monitoramento e coleta de dados
