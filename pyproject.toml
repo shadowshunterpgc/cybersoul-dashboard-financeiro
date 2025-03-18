@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "cybersoul-dashboard-financeiro"
+version = "0.1.0"
+description = "Dashboard financeiro com CrewAI e Streamlit"
+authors = ["Pablo Corrêa"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+crewai = {extras = ["tools"], version = "^0.30.11"}
+streamlit = "^1.36.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

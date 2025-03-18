@@ -1,0 +1,11 @@
+streamlit~=1.42.2
+requests~=2.32.3
+crewai~=0.102.0
+pydantic~=2.10.6
+langchain-community~=0.3.18
+pandas~=2.2.3
+plotly~=6.0.0
+yfinance~=0.2.54
+selenium~=4.29.0
+webdriver-manager~=4.0.2
+python-dotenv~=1.0.1
