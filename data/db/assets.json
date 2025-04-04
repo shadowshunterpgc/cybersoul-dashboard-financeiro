@@ -3,8 +3,8 @@
         "symbol": "NVDA",
         "name": "Nvidia",
         "type": "A\u00e7\u00e3o",
-        "shares": 6.61509917,
-        "purchase_price": 108.26,
+        "shares": 8.68898655,
+        "purchase_price": 105.44,
         "purchase_date": "2025-04-03",
         "notes": ""
     },
@@ -18,12 +18,30 @@
         "notes": ""
     },
     {
-        "symbol": "JEPI",
-        "name": "JPMORGAN EQUITY PREMIUM INCO",
+        "symbol": "SGOV",
+        "name": "Fixed Income",
         "type": "ETF",
-        "shares": 14.34650769,
+        "shares": 114.58144861,
+        "purchase_price": 100.44,
+        "purchase_date": "2025-04-03",
+        "notes": ""
+    },
+    {
+        "symbol": "JEPI",
+        "name": "JPMorgan Equity Premium Inco",
+        "type": "ETF",
+        "shares": 14.71867826,
         "purchase_price": 58.21,
         "purchase_date": "2025-04-03",
+        "notes": ""
+    },
+    {
+        "symbol": "PTEN",
+        "name": "Patterson-UTI Energy Inc.",
+        "type": "A\u00e7\u00e3o",
+        "shares": 47.20732447,
+        "purchase_price": 6.01,
+        "purchase_date": "2025-04-04",
         "notes": ""
     }
 ]
