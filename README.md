@@ -7,14 +7,16 @@
 
 ![img_1.png](img_1.png)
 ![img_2.png](img_2.png)
+![img_3.png](img_3.png)
 
 ### Necessidades
-- ~~Dólar em tempo real~~
+- Dólar em tempo real
 - Cadastro de ativos para monitoramento e coleta de dados
+- Exclusão de ativos
 - Previsão sobre lucros em investimentos com base nos dados de histórico
-- ~~Verificar qual a melhor API para obter os dados de investimentos~~
+- Verificar qual a melhor API para obter os dados de investimentos
 - Envio de notificações por e-mail ao aumentar um ativo em 5% ou mais
-- ~~Notícias sobre as ações na lista~~
+- Notícias sobre as ações na lista
 
 ### Dependências
 - Streamlit
