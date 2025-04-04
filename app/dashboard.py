@@ -10,6 +10,7 @@ from src.tasks.dollar_tasks import CurrencyTasks
 from src.tasks.post_task import PostTasks
 from src.tasks.stock_internet_task import StockInternetTask
 from src.services.portifolio_service import PortfolioService
+from app.settings import settings_page
 
 
 portifolio = PortfolioService()
@@ -18,7 +19,7 @@ portifolio = PortfolioService()
 # Função para buscar a cotação inicial
 def logo():
     st.set_page_config(page_title='{ cybersoul }', layout="wide")
-    st.logo('app/images/logotipo_flat_branco.pn', size='large')
+    st.logo('app/images/logotipo_flat_branco.png', size='large')
 
 
 def get_analise_cotacao():
@@ -98,11 +99,6 @@ def stream_data(cotacao):
         time.sleep(0.02)
 
 
-def logo():
-    st.set_page_config(page_title='{ cybersoul }', layout="wide")
-    st.logo('app/images/logotipo_flat_branco.png', size='large')
-
-
 def atualizar_dados():
     """Atualiza os dados periodicamente sem usar threads."""
     while True:
@@ -116,12 +112,16 @@ def atualizar_dados():
 
 
 def tabs():
-    financeiro = st.tabs(['Financeiro'])
+    financeiro, configuracoes = st.tabs(['Financeiro', 'Configurações'])
 
-    st.metric('Cotação do Dólar', st.session_state.get('cotacao'))
-    st.session_state.get('dolar_metrica')
-    st.session_state.get('portifolio')
-    st.session_state.get('dados_financeiros')
+    with financeiro:
+        st.metric('Cotação do Dólar', st.session_state.get('cotacao'))
+        st.session_state.get('dolar_metrica')
+        st.session_state.get('portifolio')
+        st.session_state.get('dados_financeiros')
+    
+    with configuracoes:
+        settings_page()
 
 
 if __name__ == '__main__':
