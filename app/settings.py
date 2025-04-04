@@ -9,6 +9,13 @@ def settings_page():
     """Display the settings page with asset registration form."""
     st.title("Configurações")
     
+    # Explanation for the settings page
+    st.markdown("""
+    ### Bem-vindo à Tela de Configurações
+    Nesta seção, você pode gerenciar seus ativos financeiros. Use o formulário abaixo para adicionar novos ativos ao seu portfólio. 
+    Você também pode visualizar, editar ou excluir ativos existentes.
+    """)
+    
     # Create tabs for different settings
     asset_tab, notification_tab = st.tabs(["Ativos", "Notificações"])
     
@@ -38,6 +45,10 @@ def settings_page():
                                 st.rerun()
                             else:
                                 st.error(message)
+                # Explanation for asset deletion
+                st.markdown("""
+                **Nota:** Clique no ícone de lixeira para excluir um ativo específico. Esta ação é irreversível.
+                """)
             else:
                 st.dataframe(df, use_container_width=True)
             
