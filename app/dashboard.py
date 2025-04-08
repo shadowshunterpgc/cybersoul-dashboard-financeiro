@@ -43,7 +43,7 @@ def get_dados_financeiros():
     stock_tasks = StockInternetTask()
 
     agent_stock_instance = stock_agent.stock_internet_agent()
-    task_stock_instance = stock_tasks.stock_internet_task(agent=agent_stock_instance, symbol=['NVDA', 'KO', 'BIL', 'GLD', 'JEPI'])
+    task_stock_instance = stock_tasks.stock_internet_task(agent=agent_stock_instance, symbols=['NVDA', 'PTEN', 'SPY', 'GLD', 'JEPI'])
 
     crew = Crew(
         agents=[agent_stock_instance],

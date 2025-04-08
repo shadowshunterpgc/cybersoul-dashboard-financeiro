@@ -2,15 +2,19 @@ import datetime
 
 from crewai import Task
 from datetime import datetime
+from src.services.asset_service import AssetService
 
+asset_service = AssetService()
 
 class StockInternetTask:
 
-    def stock_internet_task(self, agent, symbol):
+    def stock_internet_task(self, agent, symbols):
         current_date = datetime.now().strftime('%d/%m/%Y')
+        assets = asset_service.load_assets()
+        
         return Task(
-            description="Analyze current market conditions and major indices.",
-            expected_output=f"Provide a market summary in {current_date} for {symbol} and compare with other options.",
+            description="Analyze current market conditions, major indices, and fetch news related to registered assets.",
+            expected_output=f"Provide a market summary for {current_date}, including news for assets: {', '.join(symbols)}.",
             agent=agent
         )
 
