@@ -3,8 +3,8 @@
         "symbol": "NVDA",
         "name": "Nvidia",
         "type": "A\u00e7\u00e3o",
-        "shares": 14.40671596,
-        "purchase_price": 100.6,
+        "shares": 16.43032325,
+        "purchase_price": 100.38,
         "purchase_date": "2025-04-03",
         "notes": ""
     },
@@ -12,36 +12,27 @@
         "symbol": "SGOV",
         "name": "Fixed Income",
         "type": "ETF",
-        "shares": 99.64319336,
-        "purchase_price": 100.47,
-        "purchase_date": "2025-04-03",
-        "notes": ""
-    },
-    {
-        "symbol": "JEPI",
-        "name": "JPMorgan Equity Premium Inco",
-        "type": "ETF",
-        "shares": 22.29050265,
-        "purchase_price": 55.86,
+        "shares": 89.68700061,
+        "purchase_price": 100.49,
         "purchase_date": "2025-04-03",
         "notes": ""
     },
     {
         "symbol": "PTEN",
-        "name": "Patterson-UTI Energy Inc.",
+        "name": "Peterson",
         "type": "A\u00e7\u00e3o",
-        "shares": 186.88842512,
-        "purchase_price": 5.74,
-        "purchase_date": "2025-04-04",
+        "shares": 215.37774436,
+        "purchase_price": 5.68,
+        "purchase_date": "2025-04-11",
         "notes": ""
     },
     {
-        "symbol": "SPY",
-        "name": "SPDR S&P 500 ETF Trust",
+        "symbol": "GLD",
+        "name": "Gold Shares SPDR",
         "type": "ETF",
-        "shares": 0.5047,
-        "purchase_price": 514.98,
-        "purchase_date": "2025-04-04",
+        "shares": 1.73472242,
+        "purchase_price": 289.96,
+        "purchase_date": "2025-04-11",
         "notes": ""
     }
 ]
