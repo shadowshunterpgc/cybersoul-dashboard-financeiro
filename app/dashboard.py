@@ -1,9 +1,5 @@
 import time
 from datetime import datetime
-import json
-import sqlite3
-import shutil
-import os
 
 import streamlit as st
 import yfinance as yf

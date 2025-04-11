@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 import pandas as pd
 import yfinance as yf
-from datetime import datetime
 
 # Define the path for the assets database
 ASSETS_DB_PATH = Path("data/db/assets.json")
