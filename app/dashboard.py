@@ -13,7 +13,7 @@ from src.tasks.post_task import PostTasks
 from src.tasks.stock_internet_task import StockInternetTask
 from src.services.portifolio_service import PortfolioService
 from app.settings import settings_page
-from src.model.stock_data import StockData, StockDataRepository
+from src.entities.stock_db import StockData, StockDataRepository
 from src.services.asset_service import AssetService
 
 
