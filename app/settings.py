@@ -1,9 +1,12 @@
 import streamlit as st
 import pandas as pd
 from src.services.asset_service import AssetService
+from src.entities.caixa_db import CaixaRepository
+from src.entities.caixa_db import CaixaModel
 
-# Initialize the asset service
+# Initialize the asset service and caixa repository
 asset_service = AssetService()
+caixa_repo = CaixaRepository()
 
 # State to track which asset is being edited
 if 'edit_symbol' not in st.session_state:
@@ -20,12 +23,11 @@ def settings_page():
     # Explanation for the settings page
     st.markdown("""
     ### Bem-vindo à Tela de Configurações
-    Nesta seção, você pode gerenciar seus ativos financeiros. Use o formulário abaixo para adicionar novos ativos ao seu portfólio. 
-    Você também pode visualizar, editar ou excluir ativos existentes.
+    Nesta seção, você pode gerenciar seus ativos financeiros e configurações do sistema.
     """)
     
     # Create tabs for different settings
-    asset_tab, notification_tab = st.tabs(["Ativos", "Notificações"])
+    asset_tab, caixa_tab, notification_tab = st.tabs(["Ativos", "Caixa", "Notificações"])
     
     with asset_tab:
         st.header("Cadastro de Ativos")
@@ -145,6 +147,98 @@ def settings_page():
                         st.warning(message)
                 else:
                     st.error("Por favor, preencha todos os campos obrigatórios (Símbolo, Nome e Quantidade).")
+    
+    with caixa_tab:
+        st.header("Configuração do Caixa")
+        
+        # Get current CAIXA value
+        current_caixa = caixa_repo.get_latest_caixa()
+        current_value = float(current_caixa.valor) if current_caixa else 0.0
+        
+        # Create tabs for different CAIXA operations
+        add_tab, edit_tab, history_tab = st.tabs(["Adicionar", "Editar", "Histórico"])
+        
+        with add_tab:
+            st.markdown("""
+            ### Adicionar Novo Registro de Caixa
+            Adicione um novo valor ao seu caixa. Este valor será somado ao valor total do seu portfólio.
+            """)
+            
+            with st.form("add_caixa_form"):
+                caixa_value = st.number_input(
+                    "Valor do Caixa ($)",
+                    min_value=0.0,
+                    step=0.01,
+                    format="%.2f"
+                )
+                
+                submitted = st.form_submit_button("Adicionar Valor ao Caixa")
+                
+                if submitted:
+                    caixa_repo.save_caixa(CaixaModel(valor=caixa_value))
+                    st.success(f"Valor de ${caixa_value:.2f} adicionado ao Caixa")
+                    st.rerun()
+        
+        with edit_tab:
+            st.markdown("""
+            ### Editar Valor do Caixa
+            Atualize o valor atual do seu caixa.
+            """)
+            
+            with st.form("edit_caixa_form"):
+                caixa_value = st.number_input(
+                    "Novo Valor do Caixa ($)",
+                    value=current_value,
+                    min_value=0.0,
+                    step=0.01,
+                    format="%.2f"
+                )
+                
+                submitted = st.form_submit_button("Atualizar Valor do Caixa")
+                
+                if submitted:
+                    caixa_repo.update_caixa(caixa_value)
+                    st.success(f"Valor do Caixa atualizado para ${caixa_value:.2f}")
+                    st.rerun()
+            
+            # Delete current CAIXA value
+            if current_caixa:
+                st.markdown("---")
+                st.markdown("### Excluir Valor do Caixa")
+                if st.button("Excluir Valor Atual", type="secondary"):
+                    caixa_repo.delete_caixa(current_caixa.id)
+                    st.success("Valor do Caixa excluído com sucesso")
+                    st.rerun()
+        
+        with history_tab:
+            st.markdown("""
+            ### Histórico do Caixa
+            Visualize o histórico de alterações do seu caixa.
+            """)
+            
+            # Get all CAIXA records
+            caixa_history = caixa_repo.get_all_caixa()
+            
+            if caixa_history:
+                # Create a DataFrame for better visualization
+                history_data = []
+                for record in caixa_history:
+                    history_data.append({
+                        "Data": record.date.strftime("%d/%m/%Y %H:%M:%S"),
+                        "Valor (R$)": f"{float(record.valor):.2f}"
+                    })
+                
+                df = pd.DataFrame(history_data)
+                st.dataframe(df, use_container_width=True)
+                
+                # Add option to clear all history
+                if st.button("Limpar Todo o Histórico", type="secondary"):
+                    if st.checkbox("Confirmar exclusão de todo o histórico"):
+                        caixa_repo.clear_history()
+                        st.success("Histórico do Caixa limpo com sucesso")
+                        st.rerun()
+            else:
+                st.info("Nenhum registro no histórico do Caixa.")
     
     with notification_tab:
         st.header("Configurações de Notificações")
