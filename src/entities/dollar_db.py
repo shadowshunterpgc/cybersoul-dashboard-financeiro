@@ -62,7 +62,6 @@ def get_daily_dollar():
     conn = connect_db()
     try:
         cursor = conn.cursor()
-        # cursor.execute("SELECT bid, date_hour FROM dollar WHERE date(date_hour) = date('now') ORDER BY bid DESC")
         cursor.execute("SELECT bid, date_hour FROM dollar ORDER BY bid DESC")
         results = cursor.fetchall()
         return results

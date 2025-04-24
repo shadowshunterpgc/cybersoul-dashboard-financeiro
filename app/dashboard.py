@@ -1,9 +1,5 @@
 import time
 from datetime import datetime
-import json
-import sqlite3
-import shutil
-import os
 
 import streamlit as st
 import yfinance as yf
@@ -16,13 +12,16 @@ from src.tasks.dollar_tasks import CurrencyTasks
 from src.tasks.post_task import PostTasks
 from src.tasks.stock_internet_task import StockInternetTask
 from src.services.portifolio_service import PortfolioService
-from app.settings import settings_page
-from src.model.stock_data import StockData, StockDataRepository
 from src.services.asset_service import AssetService
+from src.services.stock_service import StockService
+from src.entities.stock_db import StockData, StockDataRepository
+from src.entities.caixa_db import CaixaRepository
+from app.settings import settings_page
 
 
 portifolio = PortfolioService()
-stock_repo = StockDataRepository()
+stock_service = StockService()
+caixa_repo = CaixaRepository()
 
 
 # Função para buscar a cotação inicial
@@ -57,7 +56,6 @@ def get_symbols_from_database():
 def get_dados_financeiros():
     stock_agent = StockInternetAgent()
     stock_tasks = StockInternetTask()
-    stock_repo = StockDataRepository()
 
     # Obter símbolos dinamicamente da base
     symbols = get_symbols_from_database()
@@ -83,35 +81,9 @@ def get_dados_financeiros():
         progress_bar = st.progress(0)
         for idx, symbol in enumerate(symbols):
             try:
-                # Usar o yfinance para obter dados atualizados
-                stock = yf.Ticker(symbol)
-                hist = stock.history(period="1d")
-                
-                if not hist.empty:
-                    latest_data = hist.iloc[-1]
-                    # Obter informações adicionais do ticker
-                    info = stock.info
-                    
-                    stock_data = StockData(
-                        id=None,
-                        symbol=symbol,
-                        price=float(latest_data['Close']),
-                        volume=int(latest_data['Volume']),
-                        high=float(latest_data['High']),
-                        low=float(latest_data['Low']),
-                        open=float(latest_data['Open']),
-                        close=float(latest_data['Close']),
-                        date=datetime.now()
-                    )
-                    
-                    stock_repo.save_stock_data(stock_data)
-
-                    # Mostrar alguns dados relevantes
-                    # with st.expander(f"Detalhes de {symbol}"):
-                    #     st.write(f"Preço: ${latest_data['Close']:.2f}")
-                    #     st.write(f"Volume: {latest_data['Volume']:,}")
-                    #     st.write(f"Variação: {((latest_data['Close'] - latest_data['Open']) / latest_data['Open'] * 100):.2f}%")
-                        
+                # Atualiza dados da ação no banco de dados
+                if stock_service.update_stock_data(symbol):
+                    st.success(f"✅ Dados de {symbol} atualizados com sucesso")
                 else:
                     st.warning(f"⚠️ Sem dados disponíveis para {symbol}")
             except Exception as e:
@@ -120,8 +92,6 @@ def get_dados_financeiros():
             finally:
                 # Atualizar barra de progresso
                 progress_bar.progress((idx + 1) / len(symbols))
-
-        st.info(f"✅ Dados salvos para {symbols}")
 
     except Exception as e:
         st.error(f"Erro ao salvar dados: {str(e)}")
@@ -178,10 +148,10 @@ def get_post_linkedin():
 def get_investment_tips():
     """Obtém dicas de investimento usando o cache_analyzer_agent com base nos dados cached."""
     stock_agent = StockInternetAgent()
-    
+
     # Obter símbolos dinamicamente da base
     symbols = get_symbols_from_database()
-    
+
     if not symbols:
         st.warning("Nenhum ativo cadastrado. Adicione ativos na aba de Configurações.")
         return
@@ -212,27 +182,71 @@ def stream_data(cotacao):
 def atualizar_dados():
     """Atualiza os dados periodicamente sem usar threads."""
     while True:
-        st.session_state["cotacao"] = f"R${portifolio.get_cotacao():.4f}"
+        # Atualiza cotação do dólar
+        cotacao, variacao = portifolio.get_cotacao()
+        st.session_state["cotacao"] = f"R${cotacao:.4f}"
+        st.session_state["variacao_dolar"] = f"{variacao:.2f}"
         st.session_state["dolar_metrica"] = portifolio.dolar_metrica()
+        
+        # Atualiza dados das ações
+        symbols = get_symbols_from_database()
+        if symbols:
+            for symbol in symbols:
+                try:
+                    stock_service.update_stock_data(symbol)
+                except Exception as e:
+                    print(f"Erro ao atualizar {symbol}: {str(e)}")
+        
+        # Atualiza portfólio
         st.session_state["portfolio"] = portifolio.portfolio()
-        st.session_state["dados_financeiros"] = get_dados_financeiros()
+        
+        # Get latest CAIXA value
+        caixa = caixa_repo.get_latest_caixa()
+        if caixa:
+            st.session_state["caixa"] = f"${float(caixa.valor):,.2f}"
+        else:
+            st.session_state["caixa"] = "$0.00"
+        
+        # Calculate total value including CAIXA
+        total_value = portifolio.get_total_value()
+        if caixa:
+            total_value += float(caixa.valor)
+        st.session_state["total_value"] = f"${total_value:,.2f}"
 
-        time.sleep(60)
-        st.rerun()  # Recarrega a página para exibir novos dados
+        time.sleep(3)
+        st.rerun(scope="app")
 
 
 def tabs():
     financeiro, configuracoes = st.tabs(['Financeiro', 'Configurações'])
 
     with financeiro:
-        # Cotação do Dólar com placeholder
-        st.metric(
-            'Cotação do Dólar',
-            st.session_state.get('cotacao'),
-            delta=None if st.session_state.get('cotacao') == "Carregando..." else "0.00"
-        )
+        col1, col2, col3 = st.columns(3)
 
-        
+        with col1:
+            # Cotação do Dólar
+            st.metric(
+                'Cotação do Dólar',
+                st.session_state.get('cotacao'),
+                delta=st.session_state.get('variacao_dolar', 0.00)
+            )
+
+        with col2:
+            # Valor do Caixa
+            st.metric(
+                'Valor do Caixa',
+                st.session_state.get('caixa', '$0.00'),
+                delta=None
+            )
+
+        with col3:
+            # Valor Total (incluindo Caixa)
+            st.metric(
+                'Valor Total',
+                st.session_state.get('total_value', '$0.00'),
+                delta=None
+            )
+
         # Métricas do dólar
         if isinstance(st.session_state.get('dolar_metrica'), dict):
             st.write(st.session_state.get('dolar_metrica'))
@@ -253,8 +267,10 @@ def initialize_default_values():
     """Initialize default values in the session state if they don't exist"""
     if "cotacao" not in st.session_state:
         st.session_state["cotacao"] = "Carregando..."
-    if "dados_financeiros" not in st.session_state:
-        st.session_state["dados_financeiros"] = "Buscando dados do mercado..."
+    if "caixa" not in st.session_state:
+        st.session_state["caixa"] = "$0.00"
+    if "total_value" not in st.session_state:
+        st.session_state["total_value"] = "$0.00"
 
 
 if __name__ == '__main__':

@@ -1,38 +1,47 @@
 [
     {
-        "symbol": "NVDA",
-        "name": "Nvidia",
-        "type": "A\u00e7\u00e3o",
-        "shares": 16.43032325,
-        "purchase_price": 100.38,
-        "purchase_date": "2025-04-03",
-        "notes": ""
-    },
-    {
         "symbol": "SGOV",
         "name": "Fixed Income",
         "type": "ETF",
-        "shares": 89.68700061,
-        "purchase_price": 100.49,
+        "shares": 49.75300743,
+        "purchase_price": 100.5,
         "purchase_date": "2025-04-03",
-        "notes": ""
-    },
-    {
-        "symbol": "PTEN",
-        "name": "Peterson",
-        "type": "A\u00e7\u00e3o",
-        "shares": 215.37774436,
-        "purchase_price": 5.68,
-        "purchase_date": "2025-04-11",
         "notes": ""
     },
     {
         "symbol": "GLD",
         "name": "Gold Shares SPDR",
         "type": "ETF",
-        "shares": 1.73472242,
-        "purchase_price": 289.96,
+        "shares": 8.51768902,
+        "purchase_price": 304.25,
         "purchase_date": "2025-04-11",
+        "notes": ""
+    },
+    {
+        "symbol": "IBIT",
+        "name": "ISHARES BITCOIN TRUST",
+        "type": "ETF",
+        "shares": 11.0548,
+        "purchase_price": 48.03,
+        "purchase_date": "2025-04-15",
+        "notes": ""
+    },
+    {
+        "symbol": "TSLA",
+        "name": "Tesla",
+        "type": "A\u00e7\u00e3o",
+        "shares": 0.0235,
+        "purchase_price": 255.01,
+        "purchase_date": "2025-04-23",
+        "notes": ""
+    },
+    {
+        "symbol": "PTEN",
+        "name": "Petterson-UTI Energy Inc.",
+        "type": "A\u00e7\u00e3o",
+        "shares": 1.36018992,
+        "purchase_price": 5.88,
+        "purchase_date": "2025-04-23",
         "notes": ""
     }
 ]
